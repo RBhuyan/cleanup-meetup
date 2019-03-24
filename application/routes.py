@@ -21,7 +21,7 @@ def home():
     events_info = make_json_struct() #Now events_info has a list of dictionaries of events
     print(events_info)
     print(json.dumps(events_info))
-    return render_template('home.html')
+    return render_template('index.html')
 
 #Method called to store an image
 @app.route('/upload', methods=['POST'])
@@ -42,9 +42,11 @@ def upload():
     file.save(f)
     print(EventNameFile)
     print(EventDateFile)
-    return render_template('home.html')
+    return render_template('index.html')
 
-
+@app.route('/create-event', methods=['GET', 'POST'])
+def create_event():
+    return render_template('create-event.html')
 
 #This function will return a jsonable
 def make_json_struct():
@@ -69,3 +71,8 @@ def make_json_struct():
         event_list.append(struct)
     print(event_list)
     return event_list
+
+#very experimental
+@app.route('/future_events_sample.json')
+def future_events_sample():
+    return render_template('future_events_sample.json')
