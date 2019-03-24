@@ -6,7 +6,7 @@ from config import Config
 from flask_bootstrap import Bootstrap
 import os
 
-UPLOAD_FOLDER = 'ZippedFile/'  #Folder that contains the zipped html files
+UPLOAD_FOLDER = 'Images/'  #Folder that contains the zipped html files
 UPLOAD_FOLDER2 = 'application/templates/HTMLfiles/'   #Folder that will contain the html files to display
 
 

@@ -2,18 +2,59 @@ from flask import render_template, flash, redirect, url_for, request, send_file,
 from application import app, bootstrap
 import geocoder
 import json
+from application.models import User, Event
+from werkzeug.utils import secure_filename
+import os
+
+UPLOAD_FOLDER = 'IMAGES/'
 
 @app.route('/')
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     g = geocoder.ip('me')
-    print(g.json)
-    print(g.latlng)
+    #print(g.json)
+    #print(g.latlng)
     data_list = []
     data_list.append(g.latlng[0])
     data_list.append(g.latlng[1])
-    #Following 2 parameters are just testing placeholders
-    data_list.append("Dummy Event Name")
-    data_list.append("Dummy Event ID")
     print(json.dumps(data_list))
+    events_info = make_json_struct() #Now events_info has a list of dictionaries of events
+    print(events_info)
+    print(json.dumps(events_info))
     return render_template('home.html')
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    file = request.files['image']
+    if not file:
+        flash ("No file")
+        return redirect(url_for('home.html'))
+    f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    file.save(f)
+    return render_template('home.html')
+
+
+
+#This function will return a jsonable
+def make_json_struct():
+    struct = {
+        "Lat" : "",
+        "Lng" : "",
+        "EventName" : "",
+        "EventID" : ""
+    }
+    event_list = []
+    events = Event.query.all()
+    for event in events:
+        print("reached make json struct")
+        print(event.lat)
+        print(event.lng)
+        print(event.name)
+        print(event.id)
+        struct["Lat"] = event.lat
+        struct["Lng"] = event.lng
+        struct["EventName"] = event.name
+        struct["EventID"] = event.id
+        event_list.append(struct)
+    print(event_list)
+    return event_list
