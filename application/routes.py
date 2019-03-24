@@ -23,14 +23,25 @@ def home():
     print(json.dumps(events_info))
     return render_template('home.html')
 
+#Method called to store an image
 @app.route('/upload', methods=['POST'])
 def upload():
     file = request.files['image']
+    EventNameFile = request.form['EventName']
+    EventDateFile = request.form['EventDate']
     if not file:
         flash ("No file")
         return redirect(url_for('home.html'))
+    if not EventNameFile:
+        flash ("Incorrect Name")
+        return redirect(url_for('home.html'))
+    if not EventDateFile:
+        flash ("Incorrect Date")
+        return redirect(url_for('home.html'))
     f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     file.save(f)
+    print(EventNameFile)
+    print(EventDateFile)
     return render_template('home.html')
 
 
